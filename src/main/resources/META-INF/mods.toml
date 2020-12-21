@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+license = "MIT"
+
+[[mods]]
+  modId="controlf"
+  version="0.5"
+  displayName="Tux"
+  issueTrackerURL="https://github.com/kregerl/Tux/issues"
+  displayURL="https://www.curseforge.com/minecraft/mc-mods/tux"
+  logoFile="tuxLogo.png"
+  authors="AreUThreatningMe"
+  description='''
+  Tux adds waddling penguins to the game. Penguins are tempted and bred with cod and will lay eggs in the same way that turtles do. Tux penguins will also spawn naturally in snowy biomes such as snowy tundra, snowy beach, and frozen rivers.
+  '''
+[[dependencies.controlf]]
+    modId="forge"
+    mandatory=true
+    versionRange="[31,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.controlf]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="AFTER"
+    side="BOTH"
