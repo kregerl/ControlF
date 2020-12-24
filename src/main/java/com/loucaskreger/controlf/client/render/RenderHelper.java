@@ -4,6 +4,8 @@ import java.util.OptionalDouble;
 
 import org.lwjgl.opengl.GL11;
 
+import com.loucaskreger.controlf.config.ClientConfig;
+
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -33,15 +35,14 @@ public class RenderHelper {
 		final boolean AFFECTS_OUTLINE = false;
 
 		RenderType.State renderState;
-		
-		renderState = RenderType.State.getBuilder().line(new RenderState.LineState(OptionalDouble.of(2)))
+
+		renderState = RenderType.State.getBuilder()
+				.line(new RenderState.LineState(OptionalDouble.of(ClientConfig.lineThickness.get())))
 				.layer(PROJECTION_LAYERING).transparency(NO_TRANSPARENCY).writeMask(WRITE_TO_DEPTH_AND_COLOR)
 				.depthTest(NO_DEPTH_TEST).build(AFFECTS_OUTLINE);
-		
-		
-		NO_DEPTH_LINE = RenderType.makeType("no_depth_line", DefaultVertexFormats.POSITION_COLOR,
-				GL11.GL_LINES, INITIAL_BUFFER_SIZE, renderState);
+
+		NO_DEPTH_LINE = RenderType.makeType("no_depth_line", DefaultVertexFormats.POSITION_COLOR, GL11.GL_LINES,
+				INITIAL_BUFFER_SIZE, renderState);
 	}
-	
 
 }

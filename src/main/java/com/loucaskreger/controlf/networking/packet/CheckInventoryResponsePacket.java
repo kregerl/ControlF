@@ -37,7 +37,6 @@ public class CheckInventoryResponsePacket {
 	public void processResponse() {
 		if (this.shouldRemove && RenderWireframe.inventories.containsKey(this.pos)) {
 			RenderWireframe.inventories.remove(this.pos);
-			System.out.println("Here");
 		}
 	}
 }

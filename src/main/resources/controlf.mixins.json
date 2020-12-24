@@ -1,9 +1,0 @@
-{
-	"required": true,
-	"package": "com.loucaskreger.controlf.mixin",
-	"compatibilityLevel": "JAVA_8",
-	"refmap": "controlf.refmap.json",
-	"mixins": [
-	],
-	"minVersion": "0.8"
-}

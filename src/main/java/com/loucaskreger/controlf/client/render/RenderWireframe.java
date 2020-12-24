@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.loucaskreger.controlf.ControlF;
 import com.loucaskreger.controlf.config.ClientConfig;
 import com.loucaskreger.controlf.networking.Networking;
@@ -36,6 +39,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = ControlF.MOD_ID, value = Dist.CLIENT)
 public class RenderWireframe {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static ConcurrentHashMap<BlockPos, ItemStack> inventories = new ConcurrentHashMap<BlockPos, ItemStack>();
 
@@ -54,7 +58,6 @@ public class RenderWireframe {
 
 		if (bPos != null && inventories.get(bPos) != null) {
 			Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(bPos, inventories.get(bPos)));
-
 		}
 
 	}
