@@ -10,7 +10,6 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.TileEntity;
@@ -20,17 +19,17 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class CheckInventoryRequestPacket {
+public class CheckSearchInventoryRequestPacket {
 	private ItemStack stack;
 	private BlockPos pos;
 
-	public CheckInventoryRequestPacket(PacketBuffer buffer) {
+	public CheckSearchInventoryRequestPacket(PacketBuffer buffer) {
 		this.stack = buffer.readItemStack();
 		this.pos = buffer.readBlockPos();
 
 	}
 
-	public CheckInventoryRequestPacket(BlockPos pos, ItemStack stack) {
+	public CheckSearchInventoryRequestPacket(BlockPos pos, ItemStack stack) {
 		this.pos = pos;
 		this.stack = stack;
 	}
@@ -78,18 +77,18 @@ public class CheckInventoryRequestPacket {
 					if (inv.count(this.stack.getItem()) == 0 && tile.count(this.stack.getItem()) == 0) {
 //						System.out.println(secondPos.toString());
 						Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
-								new CheckInventoryResponsePacket(this.pos, true));
+								new CheckSearchInventoryResponsePacket(this.pos, true));
 						Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
-								new CheckInventoryResponsePacket(secondPos, true));
+								new CheckSearchInventoryResponsePacket(secondPos, true));
 					}
 				} else if (tile.count(this.stack.getItem()) == 0) {
 					Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
-							new CheckInventoryResponsePacket(this.pos, true));
+							new CheckSearchInventoryResponsePacket(this.pos, true));
 				}
 
 			} else if (tile.count(this.stack.getItem()) == 0) {
 				Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
-						new CheckInventoryResponsePacket(this.pos, true));
+						new CheckSearchInventoryResponsePacket(this.pos, true));
 			}
 
 		} else {
@@ -103,11 +102,10 @@ public class CheckInventoryRequestPacket {
 				}
 				if (count == 0) {
 					Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
-							new CheckInventoryResponsePacket(pos, true));
+							new CheckSearchInventoryResponsePacket(pos, true));
 				}
 			});
 		}
 
 	}
-
 }

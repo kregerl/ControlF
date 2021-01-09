@@ -10,7 +10,6 @@ public class ClientConfig {
 	public static ConfigValue<Integer> red;
 	public static ConfigValue<Integer> green;
 	public static ConfigValue<Integer> blue;
-	public static ConfigValue<Integer> alpha;
 
 	public static ConfigValue<Integer> lineThickness;
 
@@ -23,7 +22,6 @@ public class ClientConfig {
 		red = builder.translation(createTranslationKey("red")).defineInRange("red", 255, 0, 255);
 		green = builder.translation(createTranslationKey("green")).defineInRange("green", 255, 0, 255);
 		blue = builder.translation(createTranslationKey("blue")).defineInRange("blue", 255, 0, 255);
-		alpha = builder.translation(createTranslationKey("alpha")).defineInRange("alpha", 255, 0, 255);
 		builder.pop();
 	}
 

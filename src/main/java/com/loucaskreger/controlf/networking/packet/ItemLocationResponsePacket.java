@@ -1,12 +1,20 @@
 package com.loucaskreger.controlf.networking.packet;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.loucaskreger.controlf.client.render.RenderWireframe;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class ItemLocationResponsePacket {
@@ -35,7 +43,21 @@ public class ItemLocationResponsePacket {
 	}
 
 	public void processResponse() {
-		RenderWireframe.inventories.put(this.pos, this.stack);
+		RenderWireframe.inventoryPos.put(this.pos, this.stack);
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player.openContainer != null && !(mc.player.openContainer instanceof PlayerContainer)) {
+			BlockRayTraceResult result = (BlockRayTraceResult) mc.objectMouseOver;
+			BlockPos pos = result.getPos();
+			RenderWireframe.bPos = pos;
+		}
+		Collection<ItemStack> inventoryStacks = RenderWireframe.inventoryPos.values();
+		for (ItemStack iStack : inventoryStacks) {
+			Item iItem = iStack.getItem();
+			if (this.stack.getItem() == iItem) {
+				RenderWireframe.itemValues.add(iItem);
+			}
+		}
+
 	}
 
 }

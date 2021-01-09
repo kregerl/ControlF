@@ -1,26 +1,23 @@
 package com.loucaskreger.controlf.networking.packet;
 
-import java.util.Collection;
 import java.util.function.Supplier;
 
 import com.loucaskreger.controlf.client.render.RenderWireframe;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class CheckInventoryResponsePacket {
+public class CheckSearchInventoryResponsePacket {
 	public BlockPos pos;
 	public boolean shouldRemove;
 
-	public CheckInventoryResponsePacket(PacketBuffer buffer) {
+	public CheckSearchInventoryResponsePacket(PacketBuffer buffer) {
 		this.pos = buffer.readBlockPos();
 		this.shouldRemove = buffer.readBoolean();
 	}
 
-	public CheckInventoryResponsePacket(BlockPos pos, boolean shouldRemove) {
+	public CheckSearchInventoryResponsePacket(BlockPos pos, boolean shouldRemove) {
 		this.pos = pos;
 		this.shouldRemove = shouldRemove;
 	}
@@ -37,8 +34,9 @@ public class CheckInventoryResponsePacket {
 	}
 
 	public void processResponse() {
-		if (this.shouldRemove && RenderWireframe.inventoryPos.containsKey(this.pos)) {
-			RenderWireframe.inventoryPos.remove(this.pos);
+		if (this.shouldRemove && RenderWireframe.searchPos.containsKey(this.pos)) {
+			RenderWireframe.searchPos.remove(this.pos);
+			RenderWireframe.force = false;
 		}
 
 	}

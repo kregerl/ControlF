@@ -4,14 +4,14 @@ license = "MIT"
 
 [[mods]]
   modId="controlf"
-  version="0.5"
-  displayName="Tux"
-  issueTrackerURL="https://github.com/kregerl/Tux/issues"
-  displayURL="https://www.curseforge.com/minecraft/mc-mods/tux"
-  logoFile="tuxLogo.png"
+  version="1.0"
+  displayName="Control-F"
+  issueTrackerURL=""
+  displayURL=""
+  logoFile=""
   authors="AreUThreatningMe"
   description='''
-  Tux adds waddling penguins to the game. Penguins are tempted and bred with cod and will lay eggs in the same way that turtles do. Tux penguins will also spawn naturally in snowy biomes such as snowy tundra, snowy beach, and frozen rivers.
+  Find items in inventories around you by pressing Ctrl + F while hovering over an item in your inventory.
   '''
 [[dependencies.controlf]]
     modId="forge"

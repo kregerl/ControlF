@@ -9,57 +9,139 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.loucaskreger.controlf.ControlF;
+import com.loucaskreger.controlf.EventSubscriber;
 import com.loucaskreger.controlf.config.ClientConfig;
 import com.loucaskreger.controlf.networking.Networking;
 import com.loucaskreger.controlf.networking.packet.CheckInventoryRequestPacket;
+import com.loucaskreger.controlf.networking.packet.CheckSearchInventoryRequestPacket;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.recipebook.RecipeBookGui;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = ControlF.MOD_ID, value = Dist.CLIENT)
 public class RenderWireframe {
 	private static final Logger LOGGER = LogManager.getLogger();
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ControlF.MOD_ID, "textures/gui/extrapart.png");
+//	private static final ResourceLocation SEARCH = new ResourceLocation(ControlF.MOD_ID, "textures/gui/search.png");
 
-	public static ConcurrentHashMap<BlockPos, ItemStack> inventories = new ConcurrentHashMap<BlockPos, ItemStack>();
+	public static ConcurrentHashMap<BlockPos, ItemStack> inventoryPos = new ConcurrentHashMap<BlockPos, ItemStack>();
+	public static ConcurrentHashMap<BlockPos, ItemStack> searchPos = new ConcurrentHashMap<BlockPos, ItemStack>();
 
-	private static BlockPos bPos = null;
+	public static List<Item> itemValues = new ArrayList<Item>();
+	public static List<Item> searchItemValues = new ArrayList<Item>();
+
+	public static BlockPos bPos = null;
+	public static boolean force = false;
+
+	static Minecraft mc = Minecraft.getInstance();
+
+	@SubscribeEvent
+	public static void leftClick(final PlayerInteractEvent.LeftClickBlock event) {
+		BlockPos pos = event.getPos();
+		if (inventoryPos.containsKey(pos)) {
+			Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(pos, inventoryPos.get(pos)));
+			return;
+		}
+		if (searchPos.containsKey(pos)) {
+			Networking.INSTANCE.sendToServer(new CheckSearchInventoryRequestPacket(bPos, searchPos.get(bPos)));
+			return;
+		}
+	}
 
 	@SubscribeEvent
 	public static void rightClick(final PlayerInteractEvent.RightClickBlock event) {
 		BlockPos pos = event.getPos();
-		if (inventories.containsKey(pos)) {
+		if (inventoryPos.containsKey(pos) || searchPos.containsKey(pos)) {
 			bPos = pos;
 		}
 	}
 
 	@SubscribeEvent
 	public static void onContainerClose(final PlayerContainerEvent.Close event) {
-
-		if (bPos != null && inventories.get(bPos) != null) {
-			Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(bPos, inventories.get(bPos)));
+		if (event.getContainer() instanceof PlayerContainer) {
+			String tfText = EventSubscriber.tf.getText();
+			EventSubscriber.fieldText = tfText;
 		}
 
+		if (bPos != null) {
+			if (inventoryPos.get(bPos) != null) {
+				Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(bPos, inventoryPos.get(bPos)));
+				force = false;
+				bPos = null;
+			}
+			if (searchPos.get(bPos) != null) {
+				Networking.INSTANCE.sendToServer(new CheckSearchInventoryRequestPacket(bPos, searchPos.get(bPos)));
+				bPos = null;
+			}
+		}
+
+	}
+
+	@SubscribeEvent
+	public static void onForeground(final GuiContainerEvent.DrawForeground event) {
+		if (bPos != null || force) {
+			for (Slot s : event.getGuiContainer().getContainer().inventorySlots) {
+				if (!(event.getGuiContainer().getContainer() instanceof PlayerContainer)) {
+					ItemStack stack = s.getStack();
+					if (!itemValues.contains(stack.getItem()) && !searchItemValues.contains(stack.getItem())) {
+						int x = s.xPos;
+						int y = s.yPos;
+						RenderSystem.disableDepthTest();
+						// ------------------------------------0xAARRGGBB
+						AbstractGui.fill(x, y, x + 16, y + 16, 0x90000000);
+						RenderSystem.enableDepthTest();
+					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onBackground(final GuiContainerEvent.DrawBackground event) {
+		if (event.getGuiContainer() instanceof InventoryScreen && mc.playerController.gameIsSurvivalOrAdventure()) {
+			ContainerScreen<?> gui = event.getGuiContainer();
+			RecipeBookGui recipeBookScreen = ((InventoryScreen) gui).getRecipeGui();
+			int guiLeft = gui.getGuiLeft();
+			int height = gui.height;
+
+			TextureManager tm = mc.textureManager;
+
+			if (!recipeBookScreen.isVisible()) {
+				tm.bindTexture(TEXTURE);
+				event.getGuiContainer().blit(guiLeft + 75, height / 2 - 94, 0, 0, 101, 14);
+			}
+//			tm.bindTexture(SEARCH);
+//			event.getGuiContainer().blit(guiLeft + 87, height / 2 - 89, 0, 0, 80, 10);
+		}
 	}
 
 	@SubscribeEvent
@@ -73,21 +155,28 @@ public class RenderWireframe {
 
 		Vec3d projectedView = mc.gameRenderer.getActiveRenderInfo().getProjectedView();
 
-		Iterator<BlockPos> it = inventories.keySet().iterator();
-		while (it.hasNext()) {
-			BlockPos pos = it.next();
-			if (world.getTileEntity(pos) == null) {
-				it.remove();
-			} else {
-				shapeToWireframe(pos, world, matrixStack, builder, projectedView);
-
-			}
-		}
+		Iterator<BlockPos> inventoryIterator = inventoryPos.keySet().iterator();
+		Iterator<BlockPos> searchIterator = searchPos.keySet().iterator();
+		drawWireframe(inventoryIterator, world, matrixStack, builder, projectedView);
+		drawWireframe(searchIterator, world, matrixStack, builder, projectedView);
 
 		RenderSystem.disableDepthTest();
 
 		((Impl) buffer).finish();
 
+	}
+
+	private static void drawWireframe(Iterator<BlockPos> iterator, World world, MatrixStack matrixStack,
+			IVertexBuilder builder, Vec3d projectedView) {
+		while (iterator.hasNext()) {
+			BlockPos pos = iterator.next();
+			if (world.getTileEntity(pos) == null) {
+				iterator.remove();
+			} else {
+				shapeToWireframe(pos, world, matrixStack, builder, projectedView);
+
+			}
+		}
 	}
 
 	private static void shapeToWireframe(BlockPos pos, World world, MatrixStack matrixStack, IVertexBuilder builder,

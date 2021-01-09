@@ -11,7 +11,6 @@ public class Config {
 	public static int red;
 	public static int green;
 	public static int blue;
-	public static int alpha;
 	public static int lineThickness;
 
 	static {
@@ -24,7 +23,6 @@ public class Config {
 		red = ClientConfig.red.get();
 		green = ClientConfig.green.get();
 		blue = ClientConfig.blue.get();
-		alpha = ClientConfig.alpha.get();
 		lineThickness = ClientConfig.lineThickness.get();
 
 	}
