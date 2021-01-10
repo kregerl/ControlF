@@ -1,0 +1,29 @@
+	modLoader="javafml"
+	loaderVersion="[32,)"
+	license="MIT"
+	
+[[mods]]
+	modId="hwylf"
+	version="1.0"
+	displayName="Here's What You're Looking For"
+	displayURL=""
+	issueTrackerURL=""
+	logoFile=""
+	credits=""
+	authors="AreUThreateningMe"
+	description='''
+'''
+
+[[dependencies.hwylf]]
+    modId="forge"
+    mandatory=true
+    versionRange="[32,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.hwylf]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.1, 1.16.4]"
+    ordering="AFTER"
+    side="BOTH"
