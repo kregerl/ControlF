@@ -1,29 +1,30 @@
 	modLoader="javafml"
-	loaderVersion="[32,)"
+	loaderVersion="[35,)"
 	license="MIT"
 	
 [[mods]]
 	modId="hwylf"
-	version="1.0"
+	version="1.0.0"
 	displayName="Here's What You're Looking For"
-	displayURL=""
-	issueTrackerURL=""
-	logoFile=""
+	displayURL="https://www.curseforge.com/minecraft/mc-mods/hwylf"
+	issueTrackerURL="https://github.com/kregerl/HWYLF/issues"
+	logoFile="logo.png"
 	credits=""
 	authors="AreUThreateningMe"
 	description='''
+	HWYLF is a utility mod that allows its users to search for specific items in the inventories around them.  
 '''
 
 [[dependencies.hwylf]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[35,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.hwylf]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1, 1.16.4]"
+    versionRange="[1.16.4]"
     ordering="AFTER"
     side="BOTH"

@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.loucaskreger.hwylf.HWYLF;
 import com.loucaskreger.hwylf.client.EventSubscriber;
 import com.loucaskreger.hwylf.config.ClientConfig;
@@ -17,7 +13,6 @@ import com.loucaskreger.hwylf.networking.packet.CheckSearchInventoryRequestPacke
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -49,7 +44,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = HWYLF.MOD_ID, value = Dist.CLIENT)
 public class RenderWireframe {
-	private static final Logger LOGGER = LogManager.getLogger();
 	private static final ResourceLocation TEXTURE = new ResourceLocation(HWYLF.MOD_ID, "textures/gui/extrapart.png");
 //	private static final ResourceLocation SEARCH = new ResourceLocation(ControlF.MOD_ID, "textures/gui/search.png");
 
@@ -88,12 +82,13 @@ public class RenderWireframe {
 	@SubscribeEvent
 	public static void onContainerClose(final PlayerContainerEvent.Close event) {
 		if (event.getContainer() instanceof PlayerContainer) {
-			String tfText = EventSubscriber.tf.getText();
-			EventSubscriber.fieldText = tfText;
+			if (EventSubscriber.tf != null) {
+				String tfText = EventSubscriber.tf.getText();
+				EventSubscriber.fieldText = tfText;
+			}
 		}
 
 		if (bPos != null) {
-			// Getting null pointer exceptions here.
 			if (!inventoryPos.isEmpty() && inventoryPos.containsKey(bPos)) {
 				Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(bPos, inventoryPos.get(bPos)));
 			}
