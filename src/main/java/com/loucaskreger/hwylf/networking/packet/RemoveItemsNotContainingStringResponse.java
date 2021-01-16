@@ -1,16 +1,12 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
+import com.loucaskreger.hwylf.client.render.RenderWireframe;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
@@ -22,60 +18,38 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class ItemContainingStringResponse {
+public class RemoveItemsNotContainingStringResponse {
 
-	private static Minecraft mc = Minecraft.getInstance();
-	private BlockPos pos;
-	private ItemStack stack;
+	private static final Minecraft mc = Minecraft.getInstance();
 	private String string;
 
-	public ItemContainingStringResponse(PacketBuffer buffer) {
-		this.pos = buffer.readBlockPos();
-		this.stack = buffer.readItemStack();
+	public RemoveItemsNotContainingStringResponse(PacketBuffer buffer) {
 		this.string = buffer.readString();
 	}
 
-	public ItemContainingStringResponse(BlockPos pos, ItemStack stack, String string) {
-		this.pos = pos;
-		this.stack = stack;
+	public RemoveItemsNotContainingStringResponse(String string) {
 		this.string = string;
 	}
 
 	public void toBytes(PacketBuffer buffer) {
-		buffer.writeBlockPos(this.pos);
-		buffer.writeItemStack(this.stack);
 		buffer.writeString(this.string);
+
 	}
 
 	public void handle(Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(this::processResponse);
+		context.get().enqueueWork(this::process);
 		context.get().setPacketHandled(true);
 	}
 
-	// Check if it is a double chest and if it is add another entry to searchPos
-	// with other chest side pos
-
-	public void processResponse() {
-		if (this.string == "") {
-			RenderWireframe.searchPos.clear();
-			RenderWireframe.searchItemValues.clear();
-			RenderWireframe.bPos = null;
-			return;
-		}
-		System.out.println("String: " + this.string);
-
-		RenderWireframe.searchPos.put(this.pos, this.stack);
+	public void process() {
+		RenderWireframe.force = true;
 
 		Iterator<Entry<BlockPos, ItemStack>> entryIterator = RenderWireframe.searchPos.entrySet().iterator();
 		while (entryIterator.hasNext()) {
 			Entry<BlockPos, ItemStack> entry = entryIterator.next();
 			if (!stackMatches(this.string, entry.getValue())) {
 				entryIterator.remove();
-			} else {
-				RenderWireframe.searchItemValues.add(entry.getValue().getItem());
 			}
-			RenderWireframe.searchPos
-					.forEach((i, j) -> System.out.println("Pos: " + i.toString() + " Stack: " + j.toString()));
 		}
 
 		Iterator<Item> itemIterator = RenderWireframe.searchItemValues.iterator();
@@ -85,7 +59,6 @@ public class ItemContainingStringResponse {
 				itemIterator.remove();
 			}
 		}
-
 	}
 
 	public static boolean stackMatches(String text, Item item) {

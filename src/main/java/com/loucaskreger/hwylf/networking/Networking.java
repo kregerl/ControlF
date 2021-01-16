@@ -1,16 +1,16 @@
-package com.loucaskreger.controlf.networking;
+package com.loucaskreger.hwylf.networking;
 
-import com.loucaskreger.controlf.ControlF;
-import com.loucaskreger.controlf.networking.packet.CheckInventoryRequestPacket;
-import com.loucaskreger.controlf.networking.packet.CheckInventoryResponsePacket;
-import com.loucaskreger.controlf.networking.packet.CheckSearchInventoryRequestPacket;
-import com.loucaskreger.controlf.networking.packet.CheckSearchInventoryResponsePacket;
-import com.loucaskreger.controlf.networking.packet.FindItemsContainingStringRequest;
-import com.loucaskreger.controlf.networking.packet.ItemContainingStringResponse;
-import com.loucaskreger.controlf.networking.packet.ItemLocationRequestPacket;
-import com.loucaskreger.controlf.networking.packet.ItemLocationResponsePacket;
-import com.loucaskreger.controlf.networking.packet.RemoveItemsNotContainingStringResponse;
-import com.loucaskreger.controlf.networking.packet.ResetRendersPacket;
+import com.loucaskreger.hwylf.Hwylf;
+import com.loucaskreger.hwylf.networking.packet.CheckInventoryRequestPacket;
+import com.loucaskreger.hwylf.networking.packet.CheckInventoryResponsePacket;
+import com.loucaskreger.hwylf.networking.packet.CheckSearchInventoryRequestPacket;
+import com.loucaskreger.hwylf.networking.packet.CheckSearchInventoryResponsePacket;
+import com.loucaskreger.hwylf.networking.packet.FindItemsContainingStringRequest;
+import com.loucaskreger.hwylf.networking.packet.ItemContainingStringResponse;
+import com.loucaskreger.hwylf.networking.packet.ItemLocationRequestPacket;
+import com.loucaskreger.hwylf.networking.packet.ItemLocationResponsePacket;
+import com.loucaskreger.hwylf.networking.packet.RemoveItemsNotContainingStringResponse;
+import com.loucaskreger.hwylf.networking.packet.ResetRendersPacket;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -26,7 +26,7 @@ public class Networking {
 	}
 
 	public static void registerMessages() {
-		INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ControlF.MOD_ID, "controlf"), () -> "1.0",
+		INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Hwylf.MOD_ID, "controlf"), () -> "1.0",
 				s -> true, s -> true);
 		INSTANCE.registerMessage(nextId(), ItemLocationRequestPacket.class, ItemLocationRequestPacket::toBytes,
 				ItemLocationRequestPacket::new, ItemLocationRequestPacket::handle);
@@ -50,11 +50,11 @@ public class Networking {
 		INSTANCE.registerMessage(nextId(), RemoveItemsNotContainingStringResponse.class,
 				RemoveItemsNotContainingStringResponse::toBytes, RemoveItemsNotContainingStringResponse::new,
 				RemoveItemsNotContainingStringResponse::handle);
-		
+
 		INSTANCE.registerMessage(nextId(), CheckSearchInventoryRequestPacket.class,
 				CheckSearchInventoryRequestPacket::toBytes, CheckSearchInventoryRequestPacket::new,
 				CheckSearchInventoryRequestPacket::handle);
-		
+
 		INSTANCE.registerMessage(nextId(), CheckSearchInventoryResponsePacket.class,
 				CheckSearchInventoryResponsePacket::toBytes, CheckSearchInventoryResponsePacket::new,
 				CheckSearchInventoryResponsePacket::handle);

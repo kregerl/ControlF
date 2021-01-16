@@ -1,4 +1,4 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
+import com.loucaskreger.hwylf.client.render.RenderWireframe;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
@@ -18,37 +18,53 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class RemoveItemsNotContainingStringResponse {
+public class ItemContainingStringResponse {
 
-	private static final Minecraft mc = Minecraft.getInstance();
+	private static Minecraft mc = Minecraft.getInstance();
+	private BlockPos pos;
+	private ItemStack stack;
 	private String string;
 
-	public RemoveItemsNotContainingStringResponse(PacketBuffer buffer) {
+	public ItemContainingStringResponse(PacketBuffer buffer) {
+		this.pos = buffer.readBlockPos();
+		this.stack = buffer.readItemStack();
 		this.string = buffer.readString();
 	}
 
-	public RemoveItemsNotContainingStringResponse(String string) {
+	public ItemContainingStringResponse(BlockPos pos, ItemStack stack, String string) {
+		this.pos = pos;
+		this.stack = stack;
 		this.string = string;
 	}
 
 	public void toBytes(PacketBuffer buffer) {
+		buffer.writeBlockPos(this.pos);
+		buffer.writeItemStack(this.stack);
 		buffer.writeString(this.string);
-
 	}
 
 	public void handle(Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(this::process);
+		context.get().enqueueWork(this::processResponse);
 		context.get().setPacketHandled(true);
 	}
 
-	public void process() {
-		RenderWireframe.force = true;
+	public void processResponse() {
+		if (this.string == "") {
+			RenderWireframe.searchPos.clear();
+			RenderWireframe.searchItemValues.clear();
+			RenderWireframe.bPos = null;
+			return;
+		}
+
+		RenderWireframe.searchPos.put(this.pos, this.stack);
 
 		Iterator<Entry<BlockPos, ItemStack>> entryIterator = RenderWireframe.searchPos.entrySet().iterator();
 		while (entryIterator.hasNext()) {
 			Entry<BlockPos, ItemStack> entry = entryIterator.next();
 			if (!stackMatches(this.string, entry.getValue())) {
 				entryIterator.remove();
+			} else {
+				RenderWireframe.searchItemValues.add(entry.getValue().getItem());
 			}
 		}
 
@@ -59,6 +75,7 @@ public class RemoveItemsNotContainingStringResponse {
 				itemIterator.remove();
 			}
 		}
+
 	}
 
 	public static boolean stackMatches(String text, Item item) {

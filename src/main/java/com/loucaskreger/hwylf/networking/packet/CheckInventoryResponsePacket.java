@@ -1,12 +1,9 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
-import java.util.Collection;
 import java.util.function.Supplier;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
+import com.loucaskreger.hwylf.client.render.RenderWireframe;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -39,6 +36,8 @@ public class CheckInventoryResponsePacket {
 	public void processResponse() {
 		if (this.shouldRemove && RenderWireframe.inventoryPos.containsKey(this.pos)) {
 			RenderWireframe.inventoryPos.remove(this.pos);
+			RenderWireframe.force = false;
+			RenderWireframe.bPos = null;
 		}
 
 	}

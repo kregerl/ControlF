@@ -1,6 +1,6 @@
-package com.loucaskreger.controlf.config;
+package com.loucaskreger.hwylf.config;
 
-import com.loucaskreger.controlf.ControlF;
+import com.loucaskreger.hwylf.Hwylf;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -26,7 +26,7 @@ public class ClientConfig {
 	}
 
 	private String createTranslationKey(String s) {
-		return ControlF.MOD_ID + ".config" + "." + s;
+		return Hwylf.MOD_ID + ".config" + "." + s;
 	}
 
 }

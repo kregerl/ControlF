@@ -1,23 +1,18 @@
-package com.loucaskreger.controlf.client.render;
+package com.loucaskreger.hwylf.client.render;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.loucaskreger.controlf.ControlF;
-import com.loucaskreger.controlf.EventSubscriber;
-import com.loucaskreger.controlf.config.ClientConfig;
-import com.loucaskreger.controlf.networking.Networking;
-import com.loucaskreger.controlf.networking.packet.CheckInventoryRequestPacket;
-import com.loucaskreger.controlf.networking.packet.CheckSearchInventoryRequestPacket;
+import com.loucaskreger.hwylf.Hwylf;
+import com.loucaskreger.hwylf.client.EventSubscriber;
+import com.loucaskreger.hwylf.config.ClientConfig;
+import com.loucaskreger.hwylf.networking.Networking;
+import com.loucaskreger.hwylf.networking.packet.CheckInventoryRequestPacket;
+import com.loucaskreger.hwylf.networking.packet.CheckSearchInventoryRequestPacket;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -47,10 +42,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = ControlF.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Hwylf.MOD_ID, value = Dist.CLIENT)
 public class RenderWireframe {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ControlF.MOD_ID, "textures/gui/extrapart.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Hwylf.MOD_ID, "textures/gui/extrapart.png");
 //	private static final ResourceLocation SEARCH = new ResourceLocation(ControlF.MOD_ID, "textures/gui/search.png");
 
 	public static ConcurrentHashMap<BlockPos, ItemStack> inventoryPos = new ConcurrentHashMap<BlockPos, ItemStack>();
@@ -88,19 +82,18 @@ public class RenderWireframe {
 	@SubscribeEvent
 	public static void onContainerClose(final PlayerContainerEvent.Close event) {
 		if (event.getContainer() instanceof PlayerContainer) {
-			String tfText = EventSubscriber.tf.getText();
-			EventSubscriber.fieldText = tfText;
+			if (EventSubscriber.tf != null) {
+				String tfText = EventSubscriber.tf.getText();
+				EventSubscriber.fieldText = tfText;
+			}
 		}
 
 		if (bPos != null) {
 			if (inventoryPos.get(bPos) != null) {
 				Networking.INSTANCE.sendToServer(new CheckInventoryRequestPacket(bPos, inventoryPos.get(bPos)));
-				force = false;
-				bPos = null;
 			}
 			if (searchPos.get(bPos) != null) {
 				Networking.INSTANCE.sendToServer(new CheckSearchInventoryRequestPacket(bPos, searchPos.get(bPos)));
-				bPos = null;
 			}
 		}
 

@@ -1,4 +1,4 @@
-package com.loucaskreger.controlf.client.screen.widget;
+package com.loucaskreger.hwylf.client.screen.widget;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -7,8 +7,8 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicates;
-import com.loucaskreger.controlf.networking.Networking;
-import com.loucaskreger.controlf.networking.packet.FindItemsContainingStringRequest;
+import com.loucaskreger.hwylf.networking.Networking;
+import com.loucaskreger.hwylf.networking.packet.FindItemsContainingStringRequest;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 

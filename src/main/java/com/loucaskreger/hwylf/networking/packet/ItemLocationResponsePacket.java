@@ -1,13 +1,10 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
+import com.loucaskreger.hwylf.client.render.RenderWireframe;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.Item;

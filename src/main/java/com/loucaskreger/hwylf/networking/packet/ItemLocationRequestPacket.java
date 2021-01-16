@@ -1,10 +1,10 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import com.loucaskreger.controlf.networking.Networking;
+import com.loucaskreger.hwylf.networking.Networking;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,8 +44,8 @@ public class ItemLocationRequestPacket {
 
 	public void processRequest(Supplier<ServerPlayerEntity> player) {
 		BlockPos playerPos = player.get().getPosition();
-		BlockPos positiveCorner = playerPos.add(5, 3, 5);
-		BlockPos negativeCorner = playerPos.add(-5, -2, -5);
+		BlockPos positiveCorner = playerPos.add(7, 3, 7);
+		BlockPos negativeCorner = playerPos.add(-7, -2, -7);
 		Stream<BlockPos> blocks = BlockPos.getAllInBox(positiveCorner, negativeCorner);
 		Iterator<BlockPos> it = blocks.iterator();
 		while (it.hasNext()) {

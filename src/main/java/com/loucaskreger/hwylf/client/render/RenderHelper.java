@@ -1,11 +1,8 @@
-package com.loucaskreger.controlf.client.render;
+package com.loucaskreger.hwylf.client.render;
 
 import java.util.OptionalDouble;
-
 import org.lwjgl.opengl.GL11;
-
-import com.loucaskreger.controlf.config.ClientConfig;
-
+import com.loucaskreger.hwylf.config.ClientConfig;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;

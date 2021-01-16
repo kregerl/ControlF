@@ -1,14 +1,14 @@
-package com.loucaskreger.controlf;
+package com.loucaskreger.hwylf.client;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
-import com.loucaskreger.controlf.client.screen.widget.RichTextFieldWidget;
-import com.loucaskreger.controlf.config.Config;
-import com.loucaskreger.controlf.networking.Networking;
-import com.loucaskreger.controlf.networking.packet.ItemLocationRequestPacket;
-import com.loucaskreger.controlf.networking.packet.ResetRendersPacket;
-
+import com.loucaskreger.hwylf.Hwylf;
+import com.loucaskreger.hwylf.client.screen.widget.RichTextFieldWidget;
+import com.loucaskreger.hwylf.compat.jei.Plugin;
+import com.loucaskreger.hwylf.config.Config;
+import com.loucaskreger.hwylf.networking.Networking;
+import com.loucaskreger.hwylf.networking.packet.ItemLocationRequestPacket;
+import com.loucaskreger.hwylf.networking.packet.ResetRendersPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
@@ -18,6 +18,7 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -26,11 +27,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 
-@Mod.EventBusSubscriber(modid = ControlF.MOD_ID)
+@Mod.EventBusSubscriber(modid = Hwylf.MOD_ID)
 public class EventSubscriber {
 
-	public static final KeyBinding search = new KeyBinding(ControlF.MOD_ID + ".key.search",
-			KeyConflictContext.UNIVERSAL, KeyModifier.NONE, getInput(GLFW_KEY_V), ControlF.MOD_ID + ".key.categories");
+	public static final KeyBinding search = new KeyBinding(Hwylf.MOD_ID + ".key.search", KeyConflictContext.UNIVERSAL,
+			KeyModifier.NONE, getInput(GLFW_KEY_V), Hwylf.MOD_ID + ".key.categories");
 
 	private static InputMappings.Input getInput(int key) {
 		return InputMappings.Type.KEYSYM.getOrMakeInput(key);
@@ -56,12 +57,18 @@ public class EventSubscriber {
 			if (currentScreen != null) {
 
 				if (currentScreen instanceof ContainerScreen) {
-
 					ContainerScreen<?> cs = (ContainerScreen<?>) currentScreen;
-					Slot slot = cs.getSlotUnderMouse();
-					if (slot != null) {
-						Networking.INSTANCE.sendToServer(new ItemLocationRequestPacket(slot.getStack()));
-						event.setCanceled(true);
+					Object jeiIngredient = Plugin.runtime.getIngredientListOverlay().getIngredientUnderMouse();
+					if (jeiIngredient != null) {
+						if (jeiIngredient instanceof ItemStack) {
+							Networking.INSTANCE.sendToServer(new ItemLocationRequestPacket((ItemStack) jeiIngredient));
+						}
+					} else {
+						Slot slot = cs.getSlotUnderMouse();
+						if (slot != null) {
+							Networking.INSTANCE.sendToServer(new ItemLocationRequestPacket(slot.getStack()));
+							event.setCanceled(true);
+						}
 					}
 				}
 			}

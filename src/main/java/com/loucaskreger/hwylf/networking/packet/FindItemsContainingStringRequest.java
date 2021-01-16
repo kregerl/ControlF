@@ -1,4 +1,4 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import com.loucaskreger.controlf.networking.Networking;
-import com.loucaskreger.controlf.util.ChestUtil;
+import com.loucaskreger.hwylf.networking.Networking;
+import com.loucaskreger.hwylf.util.ChestUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +21,6 @@ import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -55,8 +54,8 @@ public class FindItemsContainingStringRequest {
 			return;
 		}
 		BlockPos playerPos = player.get().getPosition();
-		BlockPos positiveCorner = playerPos.add(5, 3, 5);
-		BlockPos negativeCorner = playerPos.add(-5, -2, -5);
+		BlockPos positiveCorner = playerPos.add(7, 3, 7);
+		BlockPos negativeCorner = playerPos.add(-7, -2, -7);
 		Stream<BlockPos> blocks = BlockPos.getAllInBox(positiveCorner, negativeCorner);
 		Iterator<BlockPos> it = blocks.iterator();
 		while (it.hasNext()) {
@@ -70,7 +69,6 @@ public class FindItemsContainingStringRequest {
 					for (int i = 0; i < tile.getSizeInventory(); i++) {
 						ItemStack stack = tile.getStackInSlot(i);
 						if (stackMatches(this.string, stack)) {
-							// If NONE of the items match, remove it from the map
 							Block block = state.getBlock();
 							if (block instanceof ChestBlock) {
 								if (state.get(ChestBlock.TYPE) != ChestType.SINGLE) {
@@ -88,9 +86,6 @@ public class FindItemsContainingStringRequest {
 							Networking.INSTANCE.send(PacketDistributor.PLAYER.with(player),
 									new RemoveItemsNotContainingStringResponse(this.string));
 						}
-						// else { If none of the item match, send a different packet containing only the
-						// string and check all blockPos in searchPosand items in searchItemValues
-						// remove if dont match new string}
 					}
 				}
 			}

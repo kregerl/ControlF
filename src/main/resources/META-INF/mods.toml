@@ -3,23 +3,23 @@ loaderVersion="[31,)"
 license = "MIT"
 
 [[mods]]
-  modId="controlf"
-  version="1.0"
-  displayName="Control-F"
-  issueTrackerURL=""
-  displayURL=""
-  logoFile=""
+  modId="hwylf"
+  version="1.0.0"
+  displayName="Here's What You're Looking For"
+  issueTrackerURL="https://github.com/kregerl/HWYLF/issues"
+  displayURL="https://www.curseforge.com/minecraft/mc-mods/hwylf"
+  logoFile="logo.png"
   authors="AreUThreatningMe"
   description='''
-  Find items in inventories around you by pressing Ctrl + F while hovering over an item in your inventory.
+ HWYLF is a utility mod that allows its users to search for specific items in the inventories around them.  
   '''
-[[dependencies.controlf]]
+[[dependencies.hwylf]]
     modId="forge"
     mandatory=true
     versionRange="[31,)"
     ordering="AFTER"
     side="BOTH"
-[[dependencies.controlf]]
+[[dependencies.hwylf]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"

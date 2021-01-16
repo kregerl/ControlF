@@ -1,8 +1,8 @@
-package com.loucaskreger.controlf.networking.packet;
+package com.loucaskreger.hwylf.networking.packet;
 
 import java.util.function.Supplier;
 
-import com.loucaskreger.controlf.client.render.RenderWireframe;
+import com.loucaskreger.hwylf.client.render.RenderWireframe;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +37,7 @@ public class CheckSearchInventoryResponsePacket {
 		if (this.shouldRemove && RenderWireframe.searchPos.containsKey(this.pos)) {
 			RenderWireframe.searchPos.remove(this.pos);
 			RenderWireframe.force = false;
+			RenderWireframe.bPos = null;
 		}
 
 	}
