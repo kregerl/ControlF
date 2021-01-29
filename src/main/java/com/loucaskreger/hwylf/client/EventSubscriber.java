@@ -1,14 +1,12 @@
 package com.loucaskreger.hwylf.client;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
-
 import com.loucaskreger.hwylf.HWYLF;
 import com.loucaskreger.hwylf.client.screen.widget.RichTextFieldWidget;
 import com.loucaskreger.hwylf.config.Config;
 import com.loucaskreger.hwylf.networking.Networking;
 import com.loucaskreger.hwylf.networking.packet.ItemLocationRequestPacket;
 import com.loucaskreger.hwylf.networking.packet.ResetRendersPacket;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
@@ -85,6 +83,7 @@ public class EventSubscriber {
 
 	@SubscribeEvent
 	public static void drawScreen(final GuiScreenEvent.DrawScreenEvent.Post event) {
+
 		Screen gui = event.getGui();
 		if (gui instanceof InventoryScreen) {
 			RecipeBookGui recipeBookScreen = ((InventoryScreen) gui).getRecipeGui();
