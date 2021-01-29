@@ -26,8 +26,8 @@ public class Hwylf {
 		final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::setupCommon);
 		bus.addListener(this::setupClient);
-		Networking.registerMessages();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
+		Networking.registerMessages();
 
 	}
 

@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicates;
+import com.loucaskreger.hwylf.Hwylf;
 import com.loucaskreger.hwylf.networking.Networking;
 import com.loucaskreger.hwylf.networking.packet.FindItemsContainingStringRequest;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -359,6 +360,7 @@ public class RichTextFieldWidget extends Widget implements IRenderable, IGuiEven
 			} else {
 				switch (p_keyPressed_1_) {
 				case 259:
+					// Isn't getting called since JEI steals the backspace presses for some reason.
 					if (this.isEnabled) {
 						this.field_212956_h = false;
 						this.delete(-1);

@@ -60,6 +60,7 @@ public class EventSubscriber {
 					ContainerScreen<?> cs = (ContainerScreen<?>) currentScreen;
 					Object jeiIngredient = Plugin.runtime.getIngredientListOverlay().getIngredientUnderMouse();
 					if (jeiIngredient != null) {
+						Hwylf.LOGGER.info("Ingredient: " + jeiIngredient.toString());
 						if (jeiIngredient instanceof ItemStack) {
 							Networking.INSTANCE.sendToServer(new ItemLocationRequestPacket((ItemStack) jeiIngredient));
 						}
@@ -94,6 +95,7 @@ public class EventSubscriber {
 		Screen gui = event.getGui();
 		if (gui instanceof InventoryScreen) {
 			RecipeBookGui recipeBookScreen = ((InventoryScreen) gui).getRecipeGui();
+
 			if (!recipeBookScreen.isVisible()) {
 				gui.setFocused(tf);
 				tf.setVisible(true);
